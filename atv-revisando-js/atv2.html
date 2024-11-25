@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercicios Revisão 2</title>
+</head>
+<body>
+    <h1>Resposta: </h1>
+    <h2 id="answer"> </h2>
+    <p>O objetivo é não deixar o front vencer!!!!</p>
+    
+    <script>
+        const perguntas = ['Telefonou para a vítima?', "Esteve no local do crime?", "Mora perto da vítima?", 'Devia para a vítima?', 'Já trabalhou com a vítima'];
+        
+        let sim = 0
+        let respostas = ""
+        for (c of perguntas) {
+            respostas = prompt(c)
+            while(!(['s', 'n'].includes(respostas.trim().charAt(0).toLowerCase()))){
+                respostas = prompt("Responda apenas com Sim ou Não. " + c)
+            }
+            
+            sim = (respostas.trim().charAt(0).toLowerCase() == "s" ? sim += 1 : sim += 0)
+            
+            console.log(respostas.trim().charAt(0).toLowerCase())
+        }
+        console.log(sim)
+        switch(sim){
+            case 2: {
+                console.log('Suspeito')
+                document.getElementById("answer").innerText = 'Suspeito';                
+                break;
+            }
+            case 3,4: {
+                document.getElementById("answer").innerText = 'Cúmplice';                
+                break
+            }
+            case 5: {
+                document.getElementById("answer").innerText = 'Assassino';                
+                console.log('Assassino')
+                break;
+            }
+        }
+        
+    </script>
+</body>
+</html>
