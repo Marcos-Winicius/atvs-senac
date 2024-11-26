@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funções</title>
+</head>
+<body>
+    <h1>Testando funções</h1>
+    <p id="resultado"></p>
+    <script>
+        
+        function contarVogais(string){
+            const vogais = ['a', 'e', 'i', 'o', 'u']
+            let contVogais = 0
+            for(i of string.trim().toLowerCase()){
+                if(vogais.includes(i)){
+                    contVogais += 1
+                }
+            }
+            return contVogais;
+        }
+
+        const string = prompt('Digite uma palavra para saber a quantidade de vogais')
+        if(string){
+            document.getElementById('resultado').innerHTML = `A palavra <strong>${string.trim()}</strong> tem ${contarVogais(string)} vogais`;
+        }else{
+            document.getElementById('resultado').innerText = `Nenhuma palavra foi informada`;
+        }
+    </script>
+</body>
+</html>
