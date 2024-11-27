@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Array</title>
+</head>
+
+<body>
+    <h1>Array?</h1>
+    
+    <form id="form-search-value">
+        <label for="new-value">Pesquisar valor:</label>
+        <input type="text" id="search-value" placeholder="Digite um valor">
+    </form>
+    
+    <form id="form-new-value">
+        <label for="new-value">Inserir novo valor:</label>
+        <input type="text" id="new-value" placeholder="Digite um valor">
+    </form>
+    <button type="button" id="rm-last-item">Remover último item</button>
+    
+    
+    <ul id="lista">
+        
+    </ul>
+    
+    
+    <script>
+        const lista = []
+        document.addEventListener('DOMContentLoaded', () => {
+            // Event listener no formulário para pegar o valor
+            document.getElementById('form-new-value').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const new_value = document.getElementById('new-value').value;
+                
+                lista.push(new_value)
+                // Apagando novo valor
+                document.getElementById('new-value').value = ''
+                
+                // Chamando função para atualizar lista
+                atualizarValores();
+            })
+            
+            document.getElementById('search-value').addEventListener('input', (event) => {
+                pesquisarValores(event.target.value);
+            })
+            
+            
+            // Adiciona um ouvinte de evento no document (ou um contêiner pai)
+            document.addEventListener('click', (event) => {
+                // Verifica se o alvo do clique é um elemento com a classe 'rm-item'
+                if (event.target && event.target.classList.contains('rm-item')) {
+                    // Lógica para quando o item é clicado
+                    const indice = event.target.dataset.id;
+                    const value = event.target.dataset.item;
+                    
+                    removerValores(indice)
+                }
+            });
+
+            // Remover último item
+            document.getElementById('rm-last-item').addEventListener('click', ()=>{
+                if(lista.length > 0){
+                    lista.pop();
+                    atualizarValores();
+                }
+            })
+            
+        })
+        
+        function atualizarValores(array) {
+            let listaValores = document.getElementById('lista')
+            // Esvaziando lista
+            listaValores.innerHTML = ''
+            
+            if(array){
+                array.forEach((item) => {
+                    listaValores.innerHTML += `<li>${item} <button class="rm-item" data-id='${lista.indexOf(item)}' data-item='${item}'>Remover</button></li>`
+                })
+            }else{
+                lista.forEach((item) => {
+                    listaValores.innerHTML += `<li>${item} <button class="rm-item" data-id='${lista.indexOf(item)}' data-item='${item}'>Remover</button></li>`
+                })
+            }
+        }
+        
+        function pesquisarValores(string) {
+            let listaValores = document.getElementById('lista')
+            listaValores.innerHTML = ''
+            
+            
+            
+            const newlista = lista.filter((item) => item.startsWith(string));
+            atualizarValores(newlista);
+        }
+
+        function removerValores(indice, valor){
+            lista.splice(indice,1)
+            atualizarValores();
+        }
+        
+        
+        
+    </script>
+</body>
+
+</html>
