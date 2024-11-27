@@ -43,11 +43,11 @@
             
             if(array){
                 array.toSorted().forEach((item) => {
-                    listaValores.innerHTML += `<li>${item} <button class="rm-item" data-id='${lista.indexOf(item)}' data-item='${item}'>Remover</button></li>`
+                    listaValores.innerHTML += `<li>${item}</li>`
                 })
             }else{
                 lista.toSorted().forEach((item) => {
-                    listaValores.innerHTML += `<li>${item} <button class="rm-item" data-id='${lista.indexOf(item)}' data-item='${item}'>Remover</button></li>`
+                    listaValores.innerHTML += `<li>${item}</li>`
                 })
             }
         }
