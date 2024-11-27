@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindCiry</title>
+</head>
+<body>
+    <form id="form-search-value">
+        <label for="new-value">Pesquisar valor:</label>
+        <input type="text" id="search-value" placeholder="Digite um valor">
+    </form>
+    <h1>Lista de algumas cidades do Brasil</h1>
+    <ul id="lista">
+        
+    </ul>
+    
+    <script>
+        const lista = [
+        'São Paulo', 
+        'Rio de Janeiro', 
+        'Salvador', 
+        'Brasília', 
+        'Fortaleza', 
+        'Belo Horizonte', 
+        'Manaus', 
+        'Curitiba', 
+        'Recife', 
+        'Porto Alegre', 
+        'Belém', 
+        'Goiânia', 
+        'São Luís', 
+        'Maceió', 
+        'Vitória'
+        ];
+
+
+
+        function atualizarValores(array) {
+            let listaValores = document.getElementById('lista')
+            // Esvaziando lista
+            listaValores.innerHTML = ''
+            
+            if(array){
+                array.toSorted().forEach((item) => {
+                    listaValores.innerHTML += `<li>${item} <button class="rm-item" data-id='${lista.indexOf(item)}' data-item='${item}'>Remover</button></li>`
+                })
+            }else{
+                lista.toSorted().forEach((item) => {
+                    listaValores.innerHTML += `<li>${item} <button class="rm-item" data-id='${lista.indexOf(item)}' data-item='${item}'>Remover</button></li>`
+                })
+            }
+        }
+
+        function pesquisarValores(string) {
+            let listaValores = document.getElementById('lista')
+            listaValores.innerHTML = ''
+            
+            
+            
+            const newlista = lista.filter((item) => item.startsWith(string));
+            atualizarValores(newlista);
+        }
+
+        document.addEventListener('DOMContentLoaded', ()=>{    
+            // Carregar valores ao iniciar
+            atualizarValores();
+
+            document.getElementById('search-value').addEventListener('input', (event) => {
+                pesquisarValores(event.target.value);
+            })
+        })
+    </script>
+</body>
+</html>
