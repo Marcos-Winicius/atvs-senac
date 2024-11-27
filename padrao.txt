@@ -1,0 +1,10 @@
+Como vamos organizar os arquivos:
+Exemplo:
+[numero_questao] -> q1
+[numero_atv] -> atv1
+[dia/mes] -> 25-11 (Opcional)
+[tipo do arquivo] -> .html
+
+Fica mais ou menos assim -> "q1_atv1_25-11.html"
+
+Preciso dessa organização para apresentar no arquivo index.html.
