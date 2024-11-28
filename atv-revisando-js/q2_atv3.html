@@ -3,9 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Calculadora</title>
 </head>
 <body>
-    
+    <div class="calculadora">
+        <h2>Calculadora</h2>
+        <input type="number" step="any" name="pValor" id="pValor" placeholder="Digite um número:">
+        <select id="operador">
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">*</option>
+            <option value="/">/</option>
+            <option value="^">^</option>
+        </select>
+        <input type="number" step="any" name="sValor" id="sValor" placeholder="Digite outro número:">
+
+        <input type="button" onclick="calcular()" value="=">
+        <input type="text" id="resultado" placeholder="Resultado">
+    </div>
+
+    <script>
+        function calcular(){
+            const n1 = Number(document.querySelector('#pValor').value)
+            const n2 = Number(document.querySelector('#sValor').value)
+            const operator = document.querySelector('#operador').value
+            let resultado = document.querySelector('#resultado')
+
+            switch(operator.trim()){
+                case '+': {
+                    resultado.value = n1 + n2
+                    break
+                }
+                case '-': {
+                    resultado.value = n1 - n2
+                    break
+                }
+                case '*': {
+                    resultado.value = n1 * n2
+                    break
+                }
+                case '/': {
+                    resultado.value = (n2 != 0) ? n1 / n2 : 'Não é possível dividir por 0'
+                    break
+                }
+                case '^': {
+                    resultado.value = n1 ** n2
+                    break
+                }
+                default:{
+                    resultado.value = 'Operação Inválida'
+                    break
+                }
+            }
+        }
+    </script>
 </body>
 </html>
