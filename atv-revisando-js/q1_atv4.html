@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Adivinhação</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            height: 100vh;
+            background-color: #f2f2f2;
+        }
+        nav{
+            display: flex;
+            
+            color: white;
+            background-color: rgb(255, 83, 83);
+            padding: 1em;
+        }
+        /* nav > h1{
+        color: white;
+        } */
+        nav > ul{
+            display: flex;
+            column-gap: 1rem;
+            
+            align-items: center;
+            list-style-type: none;
+            margin-left: auto;
+        }
+        nav > ul a{
+            color: white;
+            text-decoration: none;
+            vertical-align: middle;
+        }
+        
+        ul a:hover{
+            font-weight: bold;
+        }
+        #container{
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+            
+            background-color: white;
+            box-shadow: 0px 0px 10px 1px #0000004d;
+            border-radius: 10px;
+            margin: 4em auto;
+            padding: 1em;
+            width: 500px;
+            height: auto;
+        }
+        input[type=number]{
+            border-width: 1px;
+            border-color: hwb(0 0% 100% / 0.616);
+            padding: 5px;
+            border-radius: 5px;
+        }
+        #restart{
+            display: none;
+        }
+        footer{
+            background-color: rgb(255, 83, 83);
+            position: absolute;
+            width: 100vw;
+            padding: 1em 0;
+            bottom: 0;
+        }
+        footer p {
+            text-align: center;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Lets play</h1>
+            <ul>
+                <li><a href="q1_atv4.html">Questão 1</a></li>
+                <li><a href="q2_atv4.html">Questão 2</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <div id="container">
+            <h1>Jogo de Adivinhação</h1> 
+            <p>Pontuação: <span id="points">100</span></p>
+            <p>Escolhi um número entre 1 e 100. Tente adivinhar.</p>
+            <p>Se a pontuação chegar a 0, você perde!</p>
+            
+            <input type="number" id="suposicao" placeholder="Digite sua suposicao">
+            <input type="button" id="verifySuposicao" value="Verificar">
+            <span id="resultado"></span>
+            <span id="tentativas"></span>
+            <span id="pontuacao"></span>
+            <input type="button" id="restart" value="Recomeçar jogo">
+        </div>
+    </main>
+    <footer>
+        <p>Site desenvolvido por Marcos-Winicius</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', ()=>{
+            let random = (Math.random() * 101).toFixed();
+            let tentativas = 0;
+            let pontuacao = 100;
+            
+            
+            // Zerando resultado
+            document.querySelector('#resultado').textContent = '';
+            document.querySelector('#tentativas').textContent = '';
+            document.querySelector('#pontuacao').textContent = '';
+            
+            document.querySelector('#verifySuposicao').addEventListener('click', (e)=>{
+                const suposicao = document.querySelector('#suposicao').value
+                
+                if(suposicao){
+                    if(pontuacao > 0){
+                        tentativas += 1;
+                        if(suposicao == random){
+                            document.querySelector('#resultado').textContent = `Parábens!! Você acertou! O número correto é ${random}`
+                            document.querySelector('#tentativas').textContent = `Você acertou em ${tentativas} tentativas!`
+                            document.querySelector('#pontuacao').textContent = `SCORE: ${pontuacao}`
+                            document.querySelector('#verifySuposicao').disabled = true;
+                            // habilitar botão restart
+                            document.querySelector('#restart').style.display = 'block';
+                            
+                            
+                        }else{
+                            pontuacao -= 10;
+                            document.querySelector('#resultado').textContent = `Desculpe, o número correto é ${(suposicao > random) ? 'menor': 'maior'}! `
+                            console.log(suposicao)
+                            console.log(random)
+                        }
+                        document.querySelector('#points').textContent = pontuacao;
+                    }else{
+                        document.querySelector('#resultado').textContent = `Você perdeu!! Pontuação final: ${pontuacao}`
+                        document.querySelector('#verifySuposicao').disabled = true;
+                        document.querySelector('#restart').style.display = 'block';
+                    }
+                }else{
+                    alert('Digite alguma suposição')
+                }
+            })
+            
+            document.querySelector('#restart').addEventListener('click', ()=>{
+                restart();
+            })
+            function restart(){
+                tentativas = 0
+                random = (Math.random() * 101).toFixed();
+                pontuacao = 100;
+                
+                // desabilitando btn restart
+                document.querySelector('#restart').style.display = 'none';
+                // habilitando vtn verify
+                document.querySelector('#verifySuposicao').disabled = false;
+                
+                // Zerando spans
+                document.querySelector('#resultado').textContent = '';
+                document.querySelector('#tentativas').textContent = '';
+                document.querySelector('#pontuacao').textContent = '';
+                
+            }
+        })
+        
+    </script>
+</body>
+</html>
