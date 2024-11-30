@@ -3,32 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Formulário</title>
 </head>
 <body>
+    <h1>Sudestão</h1>
+    <!-- Não vou utilizar form apenas por conta do envio ao teclar enter -->
+    <div>
+        <input type="text" name="item-name" id="item-name">
+        <input type="button" class="add-btn" value="Limpeza">
+        <input type="button" class="add-btn" value="Frutas">
+        <input type="button" class="add-btn" value="Mercearia">
+        <input type="button" class="add-btn" value="Congelados">
+
+    </div>
+
+    <h3>Lista de compras:</h3>
+    <button id="clear-btn">Limpar Carrinho</button>
+    <!-- carregar lista de compras aqui com base nas categorias -->
+    <div id="listas">
+
+    </div>
+
     <script>
-        let h2 = document.querySelectorAll('button');
+        let listaCompras = []
+        document.addEventListener('DOMContentLoaded', ()=>{
+            document.querySelectorAll('.add-btn').forEach((item)=>{
+                item.addEventListener('click', (e)=>{
+                    const categoria = e.target.value
+                    const texto = document.getElementById('item-name').value
+                    if(texto){
+                        addItem(texto, categoria);
+                        
+                    }else{
+                        alert('Insira um valor na caixa de texto:')
+                    }
+                })
+            })
 
-        console.log(h2)
-
-        h2.forEach((item)=>{
-            console.log(item)
-            item.addEventListener('click', (e)=>{
-                const button = e.target
-                console.log(button)
+            document.querySelector('#clear-btn').addEventListener('click', ()=>{
+                if(listaCompras.length > 0){
+                    limparLista(listaCompras)
+                    alert('Carrinho esvaziado!')
+                }else{
+                    alert('Não há nada no carrinho!')
+                }
             })
         })
 
-        let h1 = document.createElement('h1')
-        h1.id = 'marcos'
+        function addItem(nome, categoria){
+            if(nome && categoria){
+                listaCompras.push({nome, categoria})
+                atualizarLista(listaCompras)
+            }else{
+                alert('Insira um nome e categoria válidos');
+            }
+        }
 
-        console.log(h1)
-        h1.style.backgroundColor = 'blue'
+        // Função que carrega listas ordenadas com base nas categorias
+        function atualizarLista(lista){
+            let div = document.getElementById('listas')
+            div.innerHTML = ''
+            if(lista){
+                let categorias = []
+                // percorrendo lista para pegar as categorias distintas
+                lista.forEach((item)=>{
+                    /* Verificando se o array categorias possui o elemento item.categoria
+                    item.categoria é a propriedade do elemento(objeto) do array lista
+                    */
+                    if(!categorias.includes(item.categoria)){
+                        // adicionando categoria caso ela não exista ainda no array categorias
+                        categorias.push(item.categoria)
+                        // Zerando input
+                        document.getElementById('item-name').value = ''
+                    }
+                })
+                console.log(categorias)
+                categorias.forEach((categoria)=>{
+                    // (categoria) é cada categoria do array
+                    const ol = document.createElement('ol');
+                    ol.textContent = `${categoria}`
+                    ol.className = 'lista';
+                    // Criar um <li> para cada elemento do array lista que possua a categoria
+                    lista.filter((item)=> item.categoria == categoria).forEach((item)=>{
+                        const li = document.createElement('li');
+                        li.textContent = item.nome;
+                        ol.appendChild(li);
+                    })
+                    
+                    div.appendChild(ol)
+                })
+            }
+        }
 
-        h1.textContent = 'Que mentirada'
-        
-
-        document.body.appendChild(h1)
+        function limparLista(lista){
+            if(lista){
+                lista.splice(0, lista.length)
+                atualizarLista(lista);
+            }
+        }
+        console.log(listaCompras)
     </script>
 </body>
 </html>

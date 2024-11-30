@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário Dinâmico</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f9fc;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #555;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        td.actions {
+            text-align: center;
+        }
+
+        td button {
+            background-color: #007BFF;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        td button:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Cadastro de Usuários</h1>
+    <form id="userForm">
+        <label for="name">Nome:</label>
+        <input type="text" id="name" required><br><br>
+        
+        <label for="phone">Telefone:</label>
+        <input type="text" id="phone" required><br><br>
+        
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" required><br><br>
+        
+        <label for="dob">Data de Nascimento:</label>
+        <input type="date" id="dob" required><br><br>
+        
+        <label for="profession">Profissão:</label>
+        <input type="text" id="profession" required><br><br>
+        
+        <label for="address">Endereço:</label>
+        <input type="text" id="address" required><br><br>
+        
+        <button type="submit">Adicionar</button>
+    </form>
+    
+    <table id="userTable">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>E-mail</th>
+                <th>Data de Nascimento</th>
+                <th>Profissão</th>
+                <th>Endereço</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
+    
+    <script>
+        document.getElementById("userForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            
+            // Captura os valores do formulário
+            const name = document.getElementById("name").value;
+            const phone = document.getElementById("phone").value;
+            const email = document.getElementById("email").value;
+            const dob = document.getElementById("dob").value;
+            const profession = document.getElementById("profession").value;
+            const address = document.getElementById("address").value;
+            
+            // Criar nova linha na tabela
+            const tableBody = document.getElementById("userTable").querySelector("tbody");
+            const newRow = tableBody.insertRow();
+            
+            newRow.innerHTML = `
+        <td>${name}</td>
+        <td>${phone}</td>
+        <td>${email}</td>
+        <td>${dob}</td>
+        <td>${profession}</td>
+        <td>${address}</td>
+        <td class="actions">
+            <button onclick="editRow(this)">Editar</button>
+            <button onclick="deleteRow(this)">Excluir</button>
+        </td>
+    `;
+            
+            // Limpar os campos do formulário
+            this.reset();
+        });
+        
+        function editRow(button) {
+            const row = button.parentElement.parentElement;
+            const cells = row.querySelectorAll("td:not(.actions)");
+            
+            cells.forEach((cell, index) => {
+                const value = cell.innerText;
+                const input = prompt(`Editar valor (${value}):`, value);
+                if (input !== null) {
+                    cell.innerText = input;
+                }
+            });
+        }
+        
+        function deleteRow(button) {
+            const row = button.parentElement.parentElement;
+            row.remove();
+        }
+        
+    </script>
+</body>
+</html>
