@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .welcome-message {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1 class="welcome-message">Bem-vindo, <span id="user-name"></span>!</h1>
+        <p>Você está logado com sucesso. Aproveite a navegação!</p>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+
+        // Verifica se o nome de usuário foi encontrado na URL
+        if (email) {
+            const userData = JSON.parse(localStorage.getItem(email));
+            document.getElementById('user-name').textContent = userData.nome;
+        } else {
+            document.getElementById('user-name').textContent = 'Visitante';
+        }
+
+    </script>
+</body>
+</html>

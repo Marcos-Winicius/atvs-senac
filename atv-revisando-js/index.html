@@ -50,5 +50,28 @@
     <!-- <h1>Carlos é front-end developer</h1> -->
     <h1>Depois crio um dashboard</h1> 
     <p>Links starts</p>
+
+    <script>
+        // Fazer requisição
+        document.addEventListener('DOMContentLoaded', async()=>{
+            try {
+                const response = await fetch('/api/arquivos');
+                if(!response.ok){
+                    throw new Error('Erro ao fazer requisição!')
+                }
+
+                const result = await response.json();
+                console.log(result)
+                result.forEach((item)=>{
+                    const p = document.createElement('p');
+                    p.textContent = item
+
+                    document.body.appendChild(p);
+                })
+            } catch (error) {
+                
+            }
+        })
+    </script>
 </body>
 </html>

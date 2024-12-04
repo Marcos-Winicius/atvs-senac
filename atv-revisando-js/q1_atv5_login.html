@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="q1_atv5_cadastro.html">Cadastro</a></li>
+                <li><a href="q1_atv5_login.html">Login</a></li>
+                <li><a href="q1_atv5_home.html">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <div>
+            <h1>Login</h1>
+            <form id="login-form">
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email">
+                
+                <label for="senha">Senha:</label>
+                <input type="password" name="senha" id="senha">
+                
+                <input type="submit" value="Logar">
+            </form>
+        </div>
+    </main>
+    
+    <footer>
+        <p>Site desenvolvido por Marcos Winicius</p>
+    </footer>
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(() => {
+            $("#login-form").on('submit', (e) => {
+                e.preventDefault();
+                
+                const login_form = $("#login-form").serializeArray();
+                console.log(login_form)
+
+                let email_user = ''
+                for (const item of login_form) {
+                    if (item.name === 'email') {
+                        email_user = item.value;
+                    }
+                
+                }
+
+                if(validarDados(login_form)){
+                    getName(email_user);
+                    window.location.href = `q1_atv5_home.html?email=${email_user}`
+                }else{
+                    alert('Dados incorretos ou inexistentes')
+                }
+            });
+        });
+        
+        function validarDados(dados) {
+            // Variáveis para armazenar o email e a senha
+            let email = '';
+            let senha = '';
+            
+            // Pega os dados do formulário de login
+            for (const item of dados) {
+                if (item.name === 'email') {
+                    email = item.value;
+                }
+                if (item.name === 'senha') {
+                    senha = item.value;
+                }
+            }
+            
+            // Verifica se há dados armazenados no localStorage
+            const userData = JSON.parse(localStorage.getItem(email));  // Pega o objeto salvo como JSON
+            
+            if (!userData) {
+                console.error('Não há nenhum registro no localStorage');
+                return false;
+            }
+            
+            // Verifica se o email e a senha correspondem aos dados armazenados
+            if (userData.email === email && userData.senha === senha) {
+                return true;
+            }
+            
+            return false;
+        }
+        
+        function getName(email){
+            const userData = JSON.parse(localStorage.getItem(email));  // Pega o objeto salvo como JSON
+            
+            console.log(userData)
+            return userData.nome
+        }
+    </script>
+    
+</body>
+</html>

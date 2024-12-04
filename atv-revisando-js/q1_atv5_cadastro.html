@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro Usuário</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="q1_atv5_cadastro.html">Cadastro</a></li>
+                <li><a href="q1_atv5_login.html">Login</a></li>
+                <li><a href="q1_atv5_home.html">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <div>
+            <h1>Cadastro</h1>
+            <form id="cadastro-form">
+                <label for="nome">Nome:</label>
+                <input type="text" name="nome" id="nome">
+                
+                <label for="cpf">CPF:</label>
+                <input type="text" name="cpf" id="cpf">
+                
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email">
+                
+                <label for="senha">Senha:</label>
+                <input type="password" name="senha" id="senha">
+                
+                <label for="telefone">Telefone:</label>
+                <input type="tel" name="telefone" id="telefone">
+                
+                <label for="endereco">Endereço:</label>
+                <input type="text" name="endereco" id="endereco">
+                
+                <input type="submit" value="Cadastrar">
+            </form>
+        </div>
+    </main>
+    
+    <footer>
+        <p>Site desenvolvido por Marcos Winicius</p>
+    </footer>
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(() => {
+            $("#cadastro-form").on('submit', (e) => {
+                e.preventDefault();
+    
+                // Serializa os dados do formulário
+                const cadastro_form = $("#cadastro-form").serializeArray();
+                const formDataObject = {};
+    
+                // Converte os campos do formulário em um objeto
+                cadastro_form.forEach((item) => {
+                    formDataObject[item.name] = item.value;
+                });
+                
+                console.log(formDataObject.email)
+                // Armazena o objeto como JSON no localStorage
+                if(formDataObject.email){
+                    localStorage.setItem(formDataObject.email, JSON.stringify(formDataObject));
+                }
+                
+                // Redireciona para a página de login
+                window.location.href = 'q1_atv5_login.html';
+            });
+        });
+    </script>
+    
+</body>
+</html>
