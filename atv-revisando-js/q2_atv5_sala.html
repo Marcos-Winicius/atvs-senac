@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assentos</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #assentos{
+            width: 500px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        #assentos button {
+            margin: 3px;
+            min-width: 30px;
+            background-color: #ddd;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        #assentos button.selected {
+            background-color: #4CAF50; /* Cor de seleção */
+            color: white;
+        }
+
+        input[type=text]{
+            border-color: #ccc;
+            border-width: 0.50px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="q1_atv5_cadastro.html">Cadastro</a></li>
+                <li><a href="q1_atv5_login.html">Login</a></li>
+                <li><a href="q1_atv5_home.html">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main class="container">
+        <!-- Criar buttons dentro da div assentos-->
+        <div id="assentos">
+            <!-- Criar 2 divs. proximo-tela e longe-tela -->
+        </div>
+        <div id="pedido">
+            <form action="" id="form-pedido">
+                <input type="text" name="selecionadas" id="selecionadas" readonly>
+                <input type="submit" id="buy-btn" value="Comprar ingresso" disabled>
+            </form>
+        </div>
+    </main>
+    
+    <footer>
+        
+    </footer>
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        // Configurando as poltronas
+        // Desenhando poltronas
+        const poltronas = {
+            a: 10,
+            b: 10,
+            c: 10,
+            d: 10,
+            e: 8,
+            f: 8,
+            g: 8,
+            h: 6
+        }
+        
+        const poltronasSelecionadas = new Set();
+
+        // Pegar do localStorage
+        const poltronasOcupadas = []
+        
+        $(document).ready(()=>{
+            // Limpando html da div #assentos
+            $('#assentos').empty();
+            let buttonsHTML = ''
+            Object.keys(poltronas).forEach(key => {
+                // Criar button para cada número de poltronas das chaves
+                // Ex: chave K recebe 10 poltronas então vou criar 10 buttons
+                buttonsHTML += `
+                <div class='section_${key}'> 
+                <span style='padding: 10px;'>${key}</span>
+            `
+                
+                for(let i = 1; i <= poltronas[key]; i++){
+                    buttonsHTML += `<button id='${key}${i}'>${i}</button>`
+                }    
+                
+                console.log(`Chave: ${key}, Valor: ${poltronas[key]}`);
+                buttonsHTML += `<br>`
+                buttonsHTML += `</div>`
+                
+            });
+            $('#assentos').html(buttonsHTML);
+            
+            // Add evento de click nos buttons
+            $('#assentos button').click((e)=>{
+                
+                const button = $(e.target)
+                console.log(button.prop('id'))
+                let seatId = button.prop('id')
+                // Alternar entre selecionado e não selecionado
+                if (button.hasClass('selected')) {
+                    button.removeClass('selected');
+                    poltronasSelecionadas.delete(seatId);
+                } else {
+                    button.addClass('selected');
+                    poltronasSelecionadas.add(seatId);
+                }
+                verifyPoltrona();
+                
+            })
+
+            // Fazer pedido
+            $("#form-pedido").on('submit', (e)=>{
+                e.preventDefault();
+                console.log('compra')
+            })
+        })
+        
+        function verifyPoltrona(){
+            let selecionadas = ''
+            if(poltronasSelecionadas.size > 0){
+                // alert('Pode')
+                $('#buy-btn').prop('disabled', false)
+            }else{
+                // alert('Não pode')
+                $('#buy-btn').prop('disabled', true)
+            }
+            for(i of poltronasSelecionadas){
+                selecionadas += `${i} `
+            }
+            $('#selecionadas').val(selecionadas)
+            
+        }
+    </script>
+</body>
+</html>

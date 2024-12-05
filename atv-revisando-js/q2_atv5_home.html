@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        /* Resetando margens e padding padrões */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* Definindo um estilo básico para o body */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            height: 100vh;
+        }
+        
+        /* Estilo do header e navegação */
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            width: 100%;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+        }
+        
+        nav ul li {
+            margin: 0 15px;
+        }
+        
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        nav ul li a:hover {
+            color: #4CAF50;
+        }
+        
+        /* Estilo do conteúdo principal */
+        main {
+            margin-top: 80px; /* Deixa o conteúdo abaixo do header fixo */
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .filme{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            width: 70%;
+            margin: 1rem auto;
+        }
+
+        .filme img{
+            width: 30%;
+        }
+        
+        /* Estilo do footer */
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            position: relative;
+            bottom: 0;
+            padding: 15px 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="q1_atv5_cadastro.html">Cadastro</a></li>
+                <li><a href="q1_atv5_login.html">Login</a></li>
+                <li><a href="q1_atv5_home.html">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <div>
+            <h1>Escolha seus filmes</h1>
+            <!-- Filmes -->
+            <div class="filme">
+                <a href="q2_atv5_moana-2.html">
+                    <h2>Moana 2</h2>
+                </a>
+                <img src="./img/moana_2_poster.jpeg" alt="Poster de Moana 2">
+                <small>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestiae debitis, totam nobis quisquam enim beatae iste ullam sunt, doloremque pariatur fugiat, deserunt ad. Reiciendis sunt neque possimus. Eum, dolorem debitis iusto quaerat laudantium quidem aspernatur alias in itaque maxime. Quidem.</small>
+            </div>
+            
+            <div class="filme">
+                <a href="q2_atv5_wicked.html">
+                    <h2>Wicked</h2>
+                </a>
+                <img src="./img/wicked_poster.jpg" alt="Poster de Moana 2">
+                <small>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestiae debitis, totam nobis quisquam enim beatae iste ullam sunt, doloremque pariatur fugiat, deserunt ad. Reiciendis sunt neque possimus. Eum, dolorem debitis iusto quaerat laudantium quidem aspernatur alias in itaque maxime. Quidem.</small>
+            </div>
+
+        </div>
+    </main>
+    
+    <footer>
+        <p>Site desenvolvido por Marcos Winicius</p>
+    </footer>
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(() => {
+            $("#login-form").on('submit', (e) => {
+                e.preventDefault();
+                
+                const login_form = $("#login-form").serializeArray();
+                console.log(login_form)
+
+                let email_user = ''
+                for (const item of login_form) {
+                    if (item.name === 'email') {
+                        email_user = item.value;
+                    }
+                
+                }
+
+                if(validarDados(login_form)){
+                    getName(email_user);
+                    window.location.href = `q1_atv5_home.html?email=${email_user}`
+                }else{
+                    alert('Dados incorretos ou inexistentes')
+                }
+            });
+        });
+        
+        function validarDados(dados) {
+            // Variáveis para armazenar o email e a senha
+            let email = '';
+            let senha = '';
+            
+            // Pega os dados do formulário de login
+            for (const item of dados) {
+                if (item.name === 'email') {
+                    email = item.value;
+                }
+                if (item.name === 'senha') {
+                    senha = item.value;
+                }
+            }
+            
+            // Verifica se há dados armazenados no localStorage
+            const userData = JSON.parse(localStorage.getItem(email));  // Pega o objeto salvo como JSON
+            
+            if (!userData) {
+                alert('Não há nenhum registro! Faça o cadastro!');
+                window.location.href = 'q1_atv5_cadastro.html'
+                return false;
+            }
+            
+            // Verifica se o email e a senha correspondem aos dados armazenados
+            if (userData.email === email && userData.senha === senha) {
+                return true;
+            }
+            
+            return false;
+        }
+        
+        function getName(email){
+            const userData = JSON.parse(localStorage.getItem(email));  // Pega o objeto salvo como JSON
+            
+            console.log(userData)
+            return userData.nome
+        }
+    </script>
+    
+</body>
+</html>

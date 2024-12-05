@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moana 2</title>
+    <style>
+        /* Resetando margens e padding padrões */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* Definindo um estilo básico para o body */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            height: 100vh;
+        }
+        
+        /* Estilo do header e navegação */
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            width: 100%;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+        }
+        
+        nav ul li {
+            margin: 0 15px;
+        }
+        
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        nav ul li a:hover {
+            color: #4CAF50;
+        }
+        
+        /* Estilo do conteúdo principal */
+        main {
+            margin-top: 80px; /* Deixa o conteúdo abaixo do header fixo */
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .filme{
+            display: flex;
+            /* flex-direction: column; */
+            align-items: center;
+            
+            width: 70%;
+            margin: 1rem auto;
+        }
+        
+        .filme .content-img{
+            display: flex;
+            align-items: center;
+        }
+        
+        .content-img > img{
+            width: 100%;
+        }
+        
+        /* Estilo do footer */
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            padding: 15px 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="q1_atv5_cadastro.html">Cadastro</a></li>
+                <li><a href="q1_atv5_login.html">Login</a></li>
+                <li><a href="q1_atv5_home.html">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <div>
+            <!-- Filme -->
+            <div class="filme">
+                <div class="content-img"><img src="./img/moana_2_poster.jpeg" alt="Poster de Moana 2"></div>
+                <div class="content">
+                    <h2>Moana 2</h2>
+                    <small>Sequência da já clássica animação musical da Disney, Moana 2 acompanha o reencontro de Moana e Maui para uma nova aventura pelos mares. Passados três anos desde a última jornada marítima, um chamado de seus ancestrais leva a jovem polinésia Moana de volta para águas perigosas e distantes da Oceania com um grupo improvável de marinheiros.</small>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div id="horarios">
+            <!-- Setar data igual ao dia atual -->
+            <input type="date" max="2025-01-11" min="2024-12-04"  name="" id="dia">
+            <br>
+            <h3>Horários</h3>
+            
+            
+        </div>
+    </main>
+    
+    <footer>
+        <p>Site desenvolvido por Marcos Winicius</p>
+    </footer>
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(() => {
+            const dataAtual = new Date();
+            
+            // Garantir que é no horário local
+            const ano = dataAtual.getFullYear();
+            const mes = String(dataAtual.getMonth() + 1).padStart(2, '0'); // Mês começa do 0, por isso somamos 1
+            const dia = String(dataAtual.getDate()).padStart(2, '0'); // Dia no horário local
+            
+            const dataFormatada = `${ano}-${mes}-${dia}`;
+            
+            // Setar input date para o dia atual:
+            const input_dia = $("#dia").val(dataFormatada)
+            
+            const array = Object.keys(localStorage);
+            const local = localStorage;
+            
+            $('#dia').on('change', ()=>{
+                
+            })
+            console.log(local)
+            for(e of array){
+                const element = JSON.parse(localStorage.getItem(e))
+                console.log(element)
+                console.log(element.data)
+                console.log(input_dia.val())
+                if(input_dia.val() == element.data){
+                    $('#horarios').append(`<button>${element.horario}</button>`)
+                }
+            }
+        })
+        
+        function getName(email){
+            const userData = JSON.parse(localStorage.getItem(email));  // Pega o objeto salvo como JSON
+            
+            console.log(userData)
+            return userData.nome
+        }
+    </script>
+    
+</body>
+</html>
