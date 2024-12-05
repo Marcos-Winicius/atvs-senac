@@ -115,6 +115,7 @@
             <input type="date" max="2025-01-11" min="2024-12-04"  name="" id="dia">
             <br>
             <h3>Horários</h3>
+            <div id="btn-hour"></div>
             
             
         </div>
@@ -126,42 +127,115 @@
     
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
+        // Carregando função que verifica se há registros no localStorage
+        loadLocal();
+        const local = JSON.parse(localStorage.getItem('sessions'));
+        const array = Object.keys(local);
+        
+        const dataAtual = new Date();
+        
+        // Garantir que é no horário local
+        const ano = dataAtual.getFullYear();
+        const mes = String(dataAtual.getMonth() + 1).padStart(2, '0'); // Mês começa do 0, por isso somamos 1
+        const dia = String(dataAtual.getDate()).padStart(2, '0'); // Dia no horário local
+        
+        const dataFormatada = `${ano}-${mes}-${dia}`;
+        
+        // Setar input date para o dia atual:
+        const input_dia = $("#dia").val(dataFormatada)
+        
         $(document).ready(() => {
-            const dataAtual = new Date();
-            
-            // Garantir que é no horário local
-            const ano = dataAtual.getFullYear();
-            const mes = String(dataAtual.getMonth() + 1).padStart(2, '0'); // Mês começa do 0, por isso somamos 1
-            const dia = String(dataAtual.getDate()).padStart(2, '0'); // Dia no horário local
-            
-            const dataFormatada = `${ano}-${mes}-${dia}`;
-            
-            // Setar input date para o dia atual:
-            const input_dia = $("#dia").val(dataFormatada)
-            
-            const array = Object.keys(localStorage);
-            const local = localStorage;
+            getDate(array);
             
             $('#dia').on('change', ()=>{
-                
+                getDate(array) 
             })
-            console.log(local)
-            for(e of array){
-                const element = JSON.parse(localStorage.getItem(e))
-                console.log(element)
-                console.log(element.data)
-                console.log(input_dia.val())
-                if(input_dia.val() == element.data){
-                    $('#horarios').append(`<button>${element.horario}</button>`)
-                }
-            }
+            
+            
+            // local.forEach((item)=>{
+            //     // Acessando os valores do objeto (supondo que cada item tenha uma única chave)
+            //     const key = Object.keys(item)[0]; // Pegando a chave (exemplo: 1234 ou 1212)
+            //     const session = item[key]; // Acessando o objeto correspondente à chave
+            
+            //     console.log("Chave:", key);
+            //     console.log("Filme:", session.filme);
+            //     console.log("Poltronas ocupadas:", session.poltronas_ocupadas);
+            
+            // })
+            
+            
         })
         
         function getName(email){
-            const userData = JSON.parse(localStorage.getItem(email));  // Pega o objeto salvo como JSON
-            
-            console.log(userData)
+            const userData = JSON.parse(localStorage.getItem(email));  // Pega o objeto salvo como JSON            
             return userData.nome
+        }
+        
+        function getDate(array) {
+            $('#btn-hour').empty();
+            
+            // Criar um array temporário para armazenar as sessões correspondentes à data selecionada
+            const sessionsForDate = [];
+            
+            for (item of array) {
+                const sessao = local[item];
+                
+                // Verificar se a data da sessão corresponde à data no input
+                if (input_dia.val() === sessao.data) {
+                    sessionsForDate.push(sessao);
+                }
+            }
+            
+            // Ordenar as sessões pelo horário (formato HH:mm)
+            sessionsForDate.sort((a, b) => {
+                const timeA = a.horario.split(':').map(Number); // [HH, mm]
+                const timeB = b.horario.split(':').map(Number); // [HH, mm]
+                return timeA[0] - timeB[0] || timeA[1] - timeB[1]; // Ordenação por hora e minuto
+            });
+            
+            // Criar botões em ordem crescente
+            sessionsForDate.forEach((sessao) => {
+                // Encontrar a chave correspondente à sessão atual
+                const sessionId = Object.keys(local).find(key => local[key] === sessao);
+                
+                // Adicionar o botão com o número correto da sessão
+                $('#btn-hour').append(`<button onclick="window.location.href='q2_atv5_sala.html?sessao=${sessionId}'">${sessao.horario}</button>`);
+            });
+            
+        }
+        
+        
+        function loadLocal(){
+            if(localStorage.length == 0){
+                localStorage.clear();
+                const sessions = {
+                    1234: {
+                        sala: 1,
+                        filme: 'Moana 2',
+                        horario: '18:30',
+                        data: '2024-12-05',
+                        poltronas_ocupadas: []
+                    },
+                    1212: {
+                        sala: 2,
+                        filme: 'Moana 2',
+                        horario: '19:30',
+                        data: '2024-12-05',
+                        poltronas_ocupadas: ['a5', 'a6']
+                    },
+                    2121: {
+                        sala: 1,
+                        filme: 'Moana 2',
+                        horario: '18:30',
+                        data: '2024-12-06',
+                        poltronas_ocupadas: ['a5']
+                    }
+                }
+                
+                // Convertendo o array em uma string JSON e armazenando no localStorage
+                localStorage.setItem('sessions', JSON.stringify(sessions));
+                
+            }
         }
     </script>
     

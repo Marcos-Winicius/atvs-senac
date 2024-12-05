@@ -5,45 +5,168 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assentos</title>
     <style>
-        *{
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
             margin: 0;
             padding: 0;
         }
-        #assentos{
-            width: 500px;
-            margin: auto;
+        
+        /* Estilo do Cabeçalho */
+        header {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        header nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        header nav ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+        }
+        
+        header nav ul li {
+            display: inline;
+        }
+        
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        header nav ul li a:hover {
+            background-color: #0056b3;
+        }
+        
+        /* Estilo do Footer */
+        footer {
+            background-color: #f1f1f1;
+            color: #555;
+            padding: 15px 0;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            margin-top: 30px;
+            font-size: 14px;
+        }
+        
+        footer a {
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 5px;
+            transition: color 0.3s ease;
+        }
+        
+        footer a:hover {
+            color: #0056b3;
+        }
+        
+        footer p {
+            margin: 5px 0;
+        }
+        
+        #assentos {
+            max-width: 600px;
+            margin: 50px auto;
             display: flex;
             flex-direction: column;
             align-items: center;
+            gap: 15px;
+        }
+        
+        #assentos .section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            width: 100%;
+        }
+        
+        #assentos .section span {
+            font-size: 16px;
+            font-weight: bold;
+            margin-right: 10px;
         }
         
         #assentos button {
             margin: 3px;
-            min-width: 30px;
+            width: 40px;
+            height: 40px;
             background-color: #ddd;
-            border: 1px solid #ccc;
+            border: 1px solid #aaa;
+            border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: transform 0.2s ease, background-color 0.3s;
         }
         
         #assentos button.selected {
             background-color: #4CAF50; /* Cor de seleção */
             color: white;
+            transform: scale(1.1);
         }
-
-        input[type=text]{
-            border-color: #ccc;
-            border-width: 0.50px;
+        
+        #assentos button:disabled {
+            background-color: #f44336; /* Cor de ocupados */
+            color: white;
+            cursor: not-allowed;
         }
+        
+        #pedido {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        #pedido input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        #pedido input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        #pedido input[type="submit"]:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+        
+        #pedido input[type="submit"]:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+        
     </style>
 </head>
 <body>
     <header>
         <nav>
+            <h1>CineMarcos</h1>
             <ul>
-                <li><a href="q1_atv5_cadastro.html">Cadastro</a></li>
-                <li><a href="q1_atv5_login.html">Login</a></li>
-                <li><a href="q1_atv5_home.html">Home</a></li>
+                <li><a href="q2_atv5_home.html">Filmes</a></li>
+                <li><a href="q1_atv5_pedidos.html">Meus Pedidos</a></li>
+                
             </ul>
         </nav>
     </header>
@@ -68,87 +191,120 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
-        // Configurando as poltronas
-        // Desenhando poltronas
-        const poltronas = {
-            a: 10,
-            b: 10,
-            c: 10,
-            d: 10,
-            e: 8,
-            f: 8,
-            g: 8,
-            h: 6
-        }
-        
-        const poltronasSelecionadas = new Set();
-
-        // Pegar do localStorage
-        const poltronasOcupadas = []
-        
-        $(document).ready(()=>{
-            // Limpando html da div #assentos
-            $('#assentos').empty();
-            let buttonsHTML = ''
-            Object.keys(poltronas).forEach(key => {
-                // Criar button para cada número de poltronas das chaves
-                // Ex: chave K recebe 10 poltronas então vou criar 10 buttons
-                buttonsHTML += `
-                <div class='section_${key}'> 
-                <span style='padding: 10px;'>${key}</span>
-            `
-                
-                for(let i = 1; i <= poltronas[key]; i++){
-                    buttonsHTML += `<button id='${key}${i}'>${i}</button>`
-                }    
-                
-                console.log(`Chave: ${key}, Valor: ${poltronas[key]}`);
-                buttonsHTML += `<br>`
-                buttonsHTML += `</div>`
-                
-            });
-            $('#assentos').html(buttonsHTML);
+        $(document).ready(() => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionId = urlParams.get('sessao');
             
-            // Add evento de click nos buttons
-            $('#assentos button').click((e)=>{
+            // Configuração inicial das poltronas
+            const poltronas = {
+                a: 10, b: 10, c: 10, d: 10,
+                e: 8, f: 8, g: 8, h: 6
+            };
+            
+            const poltronasSelecionadas = new Set();
+            const sessions = JSON.parse(localStorage.getItem('sessions'));
+            const poltronasOcupadas = sessions[sessionId]?.poltronas_ocupadas || [];
+            
+            // Inicializar o layout
+            inicializarLayout();
+            
+            // Eventos
+            adicionarEventos();
+            
+            // Funções principais
+            
+            function inicializarLayout() {
+                $('#assentos').empty();
+                let buttonsHTML = '';
                 
-                const button = $(e.target)
-                console.log(button.prop('id'))
-                let seatId = button.prop('id')
-                // Alternar entre selecionado e não selecionado
-                if (button.hasClass('selected')) {
-                    button.removeClass('selected');
-                    poltronasSelecionadas.delete(seatId);
-                } else {
-                    button.addClass('selected');
-                    poltronasSelecionadas.add(seatId);
+                Object.keys(poltronas).forEach(letra => {
+                    buttonsHTML += criarSecaoPoltronas(letra, poltronas[letra]);
+                });
+                
+                $('#assentos').html(buttonsHTML);
+                atualizarEstadoBotaoCompra();
+            }
+            
+            function criarSecaoPoltronas(letra, quantidade) {
+                let sectionHTML = `<div class='section section_${letra}'>`;
+                    sectionHTML += `<span style='padding: 10px;'>${letra.toUpperCase()}</span>`;
+                    
+                    for (let i = 1; i <= quantidade; i++) {
+                        const idPoltrona = `${letra}${i}`;
+                        const disabled = poltronasOcupadas.includes(idPoltrona) ? 'disabled' : '';
+                        sectionHTML += `<button id='${idPoltrona}' ${disabled}>${i}</button>`;
+                    }
+                    
+                    sectionHTML += `<br></div>`;
+                    return sectionHTML;
                 }
-                verifyPoltrona();
                 
-            })
-
-            // Fazer pedido
-            $("#form-pedido").on('submit', (e)=>{
-                e.preventDefault();
-                console.log('compra')
-            })
-        })
-        
-        function verifyPoltrona(){
-            let selecionadas = ''
-            if(poltronasSelecionadas.size > 0){
-                // alert('Pode')
-                $('#buy-btn').prop('disabled', false)
-            }else{
-                // alert('Não pode')
-                $('#buy-btn').prop('disabled', true)
-            }
-            for(i of poltronasSelecionadas){
-                selecionadas += `${i} `
-            }
-            $('#selecionadas').val(selecionadas)
+                function adicionarEventos() {
+                    // Clique em uma poltrona
+                    $('#assentos').on('click', 'button', (e) => {
+                        const button = $(e.target);
+                        const seatId = button.prop('id');
+                        
+                        alternarSelecaoPoltrona(button, seatId);
+                        atualizarEstadoBotaoCompra();
+                    });
+                    
+                    // Submissão do pedido
+                    $('#form-pedido').on('submit', (e) => {
+                        e.preventDefault();
+                        salvarSelecoes();
+                    });
+                }
+                
+                function alternarSelecaoPoltrona(button, seatId) {
+                    if (button.hasClass('selected')) {
+                        button.removeClass('selected');
+                        poltronasSelecionadas.delete(seatId);
+                    } else {
+                        button.addClass('selected');
+                        poltronasSelecionadas.add(seatId);
+                    }
+                    
+                    atualizarCampoSelecionadas();
+                }
+                
+                function salvarSelecoes() {
+                    const novasPoltronas = Array.from(poltronasSelecionadas);
+                    novasPoltronas.forEach((poltrona) => {
+                        if (!poltronasOcupadas.includes(poltrona)) {
+                            poltronasOcupadas.push(poltrona);
+                        }
+                    });
+                    
+                    // Atualizar poltronas ocupadas na sessão
+                    sessions[sessionId].poltronas_ocupadas = poltronasOcupadas;
+                    localStorage.setItem('sessions', JSON.stringify(sessions));
+                    
+                    // Salvar pedidos no localStorage
+                    const pedidos = JSON.parse(localStorage.getItem('pedidos')) || [];
+                    pedidos.push({
+                        sessionId: sessionId,
+                        poltronas: novasPoltronas,
+                        horario: `${sessions[sessionId].horario}`,
+                        data: new Date().toLocaleString(),
+                    });
+                    localStorage.setItem('pedidos', JSON.stringify(pedidos));
+                    
+                    // Recarregar a página (temporário)
+                    window.location.reload();
+                }
+                
+                
+                function atualizarCampoSelecionadas() {
+                    const selecionadas = Array.from(poltronasSelecionadas).join(' ');
+                    $('#selecionadas').val(selecionadas);
+                }
+                
+                function atualizarEstadoBotaoCompra() {
+                    $('#buy-btn').prop('disabled', poltronasSelecionadas.size === 0);
+                }
+            });
             
-        }
-    </script>
-</body>
-</html>
+        </script>
+    </body>
+    </html>

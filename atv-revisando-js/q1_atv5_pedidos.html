@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Pedidos</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        
+        /* Estilo do Cabeçalho */
+        header {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        main {
+            padding: 20px;
+        }
+        
+        #pedidos-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pedido {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        
+        .pedido:last-child {
+            border-bottom: none;
+        }
+        
+        .pedido h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        
+        .pedido p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            background-color: #007BFF;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Meus Pedidos</h1>
+    </header>
+    <main>
+        <div id="pedidos-container">
+            <p>Carregando pedidos...</p>
+        </div>
+    </main>
+    <footer>
+        <p>© 2024 - Sistema de Compras de Ingressos</p>
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const pedidosContainer = document.getElementById('pedidos-container');
+            
+            // Pegar pedidos do localStorage
+            const pedidos = JSON.parse(localStorage.getItem('pedidos')) || [];
+            
+            // Verificar se há pedidos
+            if (pedidos.length === 0) {
+                pedidosContainer.innerHTML = '<p>Você ainda não realizou nenhum pedido.</p>';
+                return;
+            }
+            
+            // Gerar HTML para cada pedido
+            let pedidosHTML = '';
+            pedidos.forEach((pedido, index) => {
+                pedidosHTML += `
+            <div class="pedido">
+                <h3>Pedido ${index + 1}</h3>
+                <p><strong>Sessão:</strong> ${pedido.sessionId}</p>
+                <p><strong>Poltronas:</strong> ${pedido.poltronas.join(', ')}</p>
+                <p><strong>Data:</strong> ${pedido.data}</p>
+            </div>
+        `;
+            });
+            
+            pedidosContainer.innerHTML = pedidosHTML;
+        });
+        
+    </script>
+</body>
+</html>
