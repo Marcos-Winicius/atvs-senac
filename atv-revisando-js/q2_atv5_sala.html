@@ -33,6 +33,7 @@
             list-style: none;
             display: flex;
             gap: 15px;
+            margin: 0 !important;
         }
         
         header nav ul li {
@@ -85,7 +86,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
+            gap: 5px;
         }
         
         #assentos .section {
@@ -158,6 +159,7 @@
         }
         
     </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <header>
@@ -165,7 +167,7 @@
             <h1>CineMarcos</h1>
             <ul>
                 <li><a href="q2_atv5_home.html">Filmes</a></li>
-                <li><a href="q1_atv5_pedidos.html">Meus Pedidos</a></li>
+                <li><a href="q2_atv5_pedidos.html">Meus Pedidos</a></li>
                 
             </ul>
         </nav>
@@ -182,128 +184,192 @@
                 <input type="submit" id="buy-btn" value="Comprar ingresso" disabled>
             </form>
         </div>
+        
+        <!-- Modal tipo de ingresso -->
+        <div class="modal fade" id="ingressoModal" tabindex="-1" aria-labelledby="ingressoModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ingressoModalLabel">Escolha o Tipo de Ingresso</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-tipo-ingresso">
+                            <div class="mb-3">
+                                <label for="tipo-ingresso" class="form-label">Tipo de Ingresso</label>
+                                <select id="tipo-ingresso" class="form-select" required>
+                                    <option value="meia" >Meia - R$ 15,00</option>
+                                    <option value="inteira" selected>Inteira - R$ 30,00</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <p><strong>Resumo:</strong></p>
+                                <ul>
+                                    <li><strong>Sessão:</strong> <span id="modal-sessao"></span></li>
+                                    <li><strong>Poltronas Selecionadas:</strong> <span id="modal-poltronas"></span></li>
+                                </ul>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button id="confirmar-compra" type="button" class="btn btn-primary">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     </main>
     
     <footer>
-        
+        <p>Site desenvolvido por Marcos Winicius</p>
     </footer>
     
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('sessao');
+        const sessions = JSON.parse(localStorage.getItem('sessions'));
+        const session = sessions[sessionId];
+        const poltronasSelecionadas = new Set();
+        const poltronasOcupadas = session.poltronas_ocupadas || [];
+        const precoMeia = 15;
+        const precoInteira = 30;
+        
         $(document).ready(() => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const sessionId = urlParams.get('sessao');
-            
-            // Configuração inicial das poltronas
-            const poltronas = {
-                a: 10, b: 10, c: 10, d: 10,
-                e: 8, f: 8, g: 8, h: 6
-            };
-            
-            const poltronasSelecionadas = new Set();
-            const sessions = JSON.parse(localStorage.getItem('sessions'));
-            const poltronasOcupadas = sessions[sessionId]?.poltronas_ocupadas || [];
-            
-            // Inicializar o layout
+            // Chamada para inicializar o layout e adicionar eventos
             inicializarLayout();
-            
-            // Eventos
             adicionarEventos();
+        });
+        
+        function inicializarLayout() {    
+            // Gerar poltronas
+            gerarPoltronas(poltronasSelecionadas, poltronasOcupadas);
             
-            // Funções principais
-            
-            function inicializarLayout() {
-                $('#assentos').empty();
-                let buttonsHTML = '';
+            // Configurar informações da sessão no modal
+            configurarModal(session, poltronasSelecionadas);
+        }
+        
+        function adicionarEventos() {
+            // Adiciona evento para o envio do formulário de pedido
+            $("#form-pedido").on("submit", (e) => {
+                e.preventDefault();
                 
-                Object.keys(poltronas).forEach(letra => {
-                    buttonsHTML += criarSecaoPoltronas(letra, poltronas[letra]);
+                if (poltronasSelecionadas.size === 0) {
+                    alert("Selecione ao menos uma poltrona antes de prosseguir.");
+                    return;
+                }
+                
+                // Exibir o modal para confirmar a compra usando jQuery
+                $('#ingressoModal').modal('show');
+                $("#modal-poltronas").text($('#selecionadas').val().trim().replace(' ', ' - '))
+                
+            });
+            
+            // Adiciona evento para confirmação da compra no modal
+            $("#confirmar-compra").on("click", () => {
+                const tipoIngresso = $("#tipo-ingresso").val();
+                if (!tipoIngresso) {
+                    alert("Por favor, selecione um tipo de ingresso.");
+                    return;
+                }
+                
+                // Salvar o pedido com os dados da sessão e tipo de ingresso
+                salvarPedido(tipoIngresso, poltronasSelecionadas);
+            });
+        }
+        
+        function gerarPoltronas(poltronasSelecionadas, poltronasOcupadas) {
+            const poltronas = {
+                A: 12,
+                B: 12,
+                C: 10,
+                D: 10, 
+                E: 10,
+                F: 8,
+                G: 8
+            };
+            let buttonsHTML = "";
+            Object.keys(poltronas).forEach((key) => {
+                buttonsHTML += `<div class="section section_${key}">`;
+                    buttonsHTML += `<span style="padding: 10px;">${key}</span>`;
+                    for (let i = 1; i <= poltronas[key]; i++) {
+                        const id = `${key}${i}`;
+                        const isOcupada = poltronasOcupadas.includes(id);
+                        buttonsHTML += `<button id="${id}" ${isOcupada ? "disabled" : ""}>${i}</button>`;
+                    }
+                    buttonsHTML += `</div><br>`;
                 });
+                $("#assentos").html(buttonsHTML);
                 
-                $('#assentos').html(buttonsHTML);
-                atualizarEstadoBotaoCompra();
+                // Adiciona eventos de clique nas poltronas
+                $("#assentos button").click((e) => {
+                    const button = $(e.target);
+                    const id = button.attr("id");
+                    
+                    if (button.hasClass("selected")) {
+                        button.removeClass("selected");
+                        poltronasSelecionadas.delete(id);
+                    } else {
+                        button.addClass("selected");
+                        poltronasSelecionadas.add(id);
+                    }
+                    
+                    verifyPoltronas();
+                });
             }
             
-            function criarSecaoPoltronas(letra, quantidade) {
-                let sectionHTML = `<div class='section section_${letra}'>`;
-                    sectionHTML += `<span style='padding: 10px;'>${letra.toUpperCase()}</span>`;
-                    
-                    for (let i = 1; i <= quantidade; i++) {
-                        const idPoltrona = `${letra}${i}`;
-                        const disabled = poltronasOcupadas.includes(idPoltrona) ? 'disabled' : '';
-                        sectionHTML += `<button id='${idPoltrona}' ${disabled}>${i}</button>`;
+            function configurarModal(session, poltronasSelecionadas) {
+                $("#modal-sessao").text(`${sessionId} - ${session.filme} - Sala ${session.sala}`);
+                $("#modal-poltronas").text(Array.from(poltronasSelecionadas).join(", "));
+            }
+            
+            function verifyPoltronas() {
+                $("#buy-btn").prop("disabled", poltronasSelecionadas.size === 0);
+                $("#selecionadas").val(Array.from(poltronasSelecionadas).join(" "));
+            }
+            
+            function salvarPedido(tipoIngresso, poltronasSelecionadas) {
+                const precoMeia = 15;
+                const precoInteira = 30;
+                const valorIngresso = tipoIngresso === "meia" ? precoMeia : precoInteira;
+                const total = valorIngresso * poltronasSelecionadas.size;
+                
+                // Atualizar poltronas ocupadas
+                const sessions = JSON.parse(localStorage.getItem('sessions'));
+                const session = sessions[sessionId];
+                const poltronasOcupadas = session.poltronas_ocupadas || [];
+                Array.from(poltronasSelecionadas).forEach((poltrona) => {
+                    if (!poltronasOcupadas.includes(poltrona)) {
+                        poltronasOcupadas.push(poltrona);
                     }
-                    
-                    sectionHTML += `<br></div>`;
-                    return sectionHTML;
-                }
+                });
                 
-                function adicionarEventos() {
-                    // Clique em uma poltrona
-                    $('#assentos').on('click', 'button', (e) => {
-                        const button = $(e.target);
-                        const seatId = button.prop('id');
-                        
-                        alternarSelecaoPoltrona(button, seatId);
-                        atualizarEstadoBotaoCompra();
-                    });
-                    
-                    // Submissão do pedido
-                    $('#form-pedido').on('submit', (e) => {
-                        e.preventDefault();
-                        salvarSelecoes();
-                    });
-                }
+                // Salvar as poltronas ocupadas na sessão
+                sessions[sessionId].poltronas_ocupadas = poltronasOcupadas;
+                localStorage.setItem("sessions", JSON.stringify(sessions));
                 
-                function alternarSelecaoPoltrona(button, seatId) {
-                    if (button.hasClass('selected')) {
-                        button.removeClass('selected');
-                        poltronasSelecionadas.delete(seatId);
-                    } else {
-                        button.addClass('selected');
-                        poltronasSelecionadas.add(seatId);
-                    }
-                    
-                    atualizarCampoSelecionadas();
-                }
+                // Salvar o pedido no localStorage
+                const pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
+                pedidos.push({
+                    sessionId: sessionId,
+                    filme: session.filme,
+                    sala: session.sala,
+                    dataSessao: session.data,
+                    dataCompra: new Date().toLocaleString(),
+                    poltronas: Array.from(poltronasSelecionadas),
+                    tipoIngresso: tipoIngresso,
+                    valorIngresso: valorIngresso,
+                    total: total,
+                });
+                localStorage.setItem("pedidos", JSON.stringify(pedidos));
                 
-                function salvarSelecoes() {
-                    const novasPoltronas = Array.from(poltronasSelecionadas);
-                    novasPoltronas.forEach((poltrona) => {
-                        if (!poltronasOcupadas.includes(poltrona)) {
-                            poltronasOcupadas.push(poltrona);
-                        }
-                    });
-                    
-                    // Atualizar poltronas ocupadas na sessão
-                    sessions[sessionId].poltronas_ocupadas = poltronasOcupadas;
-                    localStorage.setItem('sessions', JSON.stringify(sessions));
-                    
-                    // Salvar pedidos no localStorage
-                    const pedidos = JSON.parse(localStorage.getItem('pedidos')) || [];
-                    pedidos.push({
-                        sessionId: sessionId,
-                        poltronas: novasPoltronas,
-                        horario: `${sessions[sessionId].horario}`,
-                        data: new Date().toLocaleString(),
-                    });
-                    localStorage.setItem('pedidos', JSON.stringify(pedidos));
-                    
-                    // Recarregar a página (temporário)
-                    window.location.reload();
-                }
-                
-                
-                function atualizarCampoSelecionadas() {
-                    const selecionadas = Array.from(poltronasSelecionadas).join(' ');
-                    $('#selecionadas').val(selecionadas);
-                }
-                
-                function atualizarEstadoBotaoCompra() {
-                    $('#buy-btn').prop('disabled', poltronasSelecionadas.size === 0);
-                }
-            });
+                alert(`Compra confirmada! Total: R$ ${total.toFixed(2)}`);
+                location.reload();
+            }
+            
             
         </script>
     </body>

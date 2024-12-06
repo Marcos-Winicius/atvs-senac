@@ -80,32 +80,31 @@
     </footer>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const pedidosContainer = document.getElementById('pedidos-container');
+            const pedidosContainer = document.getElementById("pedidos-container");
+            const pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
             
-            // Pegar pedidos do localStorage
-            const pedidos = JSON.parse(localStorage.getItem('pedidos')) || [];
-            
-            // Verificar se há pedidos
             if (pedidos.length === 0) {
-                pedidosContainer.innerHTML = '<p>Você ainda não realizou nenhum pedido.</p>';
+                pedidosContainer.innerHTML = "<p>Você ainda não realizou nenhum pedido.</p>";
                 return;
             }
             
-            // Gerar HTML para cada pedido
-            let pedidosHTML = '';
-            pedidos.forEach((pedido, index) => {
-                pedidosHTML += `
-            <div class="pedido">
-                <h3>Pedido ${index + 1}</h3>
-                <p><strong>Sessão:</strong> ${pedido.sessionId}</p>
-                <p><strong>Poltronas:</strong> ${pedido.poltronas.join(', ')}</p>
-                <p><strong>Data:</strong> ${pedido.data}</p>
-            </div>
-        `;
-            });
+            let pedidosHTML = pedidos.map((pedido, index) => `
+        <div class="pedido">
+            <h3>Pedido ${index + 1}</h3>
+            <p><strong>Filme:</strong> ${pedido.filme}</p>
+            <p><strong>Sala:</strong> ${pedido.sala}</p>
+            <p><strong>Data da Sessão:</strong> ${pedido.dataSessao}</p>
+            <p><strong>Data da Compra:</strong> ${pedido.dataCompra}</p>
+            <p><strong>Poltronas:</strong> ${pedido.poltronas.join(", ")}</p>
+            <p><strong>Tipo de Ingresso:</strong> ${pedido.tipoIngresso}</p>
+            <p><strong>Valor Unitário:</strong> R$ ${pedido.valorIngresso.toFixed(2)}</p>
+            <p><strong>Total:</strong> R$ ${pedido.total.toFixed(2)}</p>
+        </div>
+    `).join("");
             
             pedidosContainer.innerHTML = pedidosHTML;
         });
+        
         
     </script>
 </body>
