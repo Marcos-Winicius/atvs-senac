@@ -234,7 +234,9 @@
         const sessions = JSON.parse(localStorage.getItem('sessions'));
         const session = sessions[sessionId];
         const poltronasSelecionadas = new Set();
-        const poltronasOcupadas = session.poltronas_ocupadas || [];
+        const poltronasOcupadas = session.poltronas_ocupadas.map((item)=> item.toUpperCase()) || [];
+        // poltronasOcupadas = poltronasOcupadas.map((item)=> item.toLowerCase());
+        console.log(poltronasOcupadas)
         const precoMeia = 15;
         const precoInteira = 30;
         
@@ -282,15 +284,27 @@
         }
         
         function gerarPoltronas(poltronasSelecionadas, poltronasOcupadas) {
-            const poltronas = {
-                A: 12,
-                B: 12,
-                C: 10,
-                D: 10, 
-                E: 10,
-                F: 8,
-                G: 8
-            };
+            let poltronas = {};
+            if(session.sala == 1){
+                poltronas = {
+                    A: 12,
+                    B: 12,
+                    C: 10,
+                    D: 10, 
+                    E: 10,
+                    F: 8,
+                    G: 8
+                }
+            }else if(session.sala == 2){
+                poltronas = {
+                    A: 10,
+                    B: 5,
+                    C: 5,
+                    D: 5, 
+                    E: 5,
+                    F: 5
+                }
+            }
             let buttonsHTML = "";
             Object.keys(poltronas).forEach((key) => {
                 buttonsHTML += `<div class="section section_${key}">`;
