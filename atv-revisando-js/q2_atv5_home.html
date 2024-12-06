@@ -60,11 +60,11 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-
+            
             width: 70%;
             margin: 1rem auto;
         }
-
+        
         .filme img{
             width: 30%;
         }
@@ -111,7 +111,7 @@
                 <img src="./img/wicked_poster.jpg" alt="Poster de Moana 2">
                 <small>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestiae debitis, totam nobis quisquam enim beatae iste ullam sunt, doloremque pariatur fugiat, deserunt ad. Reiciendis sunt neque possimus. Eum, dolorem debitis iusto quaerat laudantium quidem aspernatur alias in itaque maxime. Quidem.</small>
             </div>
-
+            
         </div>
     </main>
     
@@ -122,20 +122,23 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
         $(document).ready(() => {
+            // Carregando função que verifica se há registros no localStorage
+            loadLocal();
+
             $("#login-form").on('submit', (e) => {
                 e.preventDefault();
                 
                 const login_form = $("#login-form").serializeArray();
                 console.log(login_form)
-
+                
                 let email_user = ''
                 for (const item of login_form) {
                     if (item.name === 'email') {
                         email_user = item.value;
                     }
-                
+                    
                 }
-
+                
                 if(validarDados(login_form)){
                     getName(email_user);
                     window.location.href = `q1_atv5_home.html?email=${email_user}`
@@ -182,6 +185,39 @@
             
             console.log(userData)
             return userData.nome
+        }
+        
+        function loadLocal(){
+            if(localStorage.length == 0){
+                localStorage.clear();
+                const sessions = {
+                    1234: {
+                        sala: 1,
+                        filme: 'Moana 2',
+                        horario: '18:30',
+                        data: '2024-12-05',
+                        poltronas_ocupadas: []
+                    },
+                    1212: {
+                        sala: 2,
+                        filme: 'Moana 2',
+                        horario: '19:30',
+                        data: '2024-12-05',
+                        poltronas_ocupadas: ['a5', 'a6']
+                    },
+                    2121: {
+                        sala: 1,
+                        filme: 'Wicked',
+                        horario: '18:30',
+                        data: '2024-12-06',
+                        poltronas_ocupadas: ['a5']
+                    }
+                }
+                
+                // Convertendo o array em uma string JSON e armazenando no localStorage
+                localStorage.setItem('sessions', JSON.stringify(sessions));
+                
+            }
         }
     </script>
     

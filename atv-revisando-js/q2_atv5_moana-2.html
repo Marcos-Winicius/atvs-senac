@@ -127,8 +127,6 @@
     
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
-        // Carregando função que verifica se há registros no localStorage
-        loadLocal();
         const local = JSON.parse(localStorage.getItem('sessions'));
         const array = Object.keys(local);
         
@@ -205,38 +203,7 @@
         }
         
         
-        function loadLocal(){
-            if(localStorage.length == 0){
-                localStorage.clear();
-                const sessions = {
-                    1234: {
-                        sala: 1,
-                        filme: 'Moana 2',
-                        horario: '18:30',
-                        data: '2024-12-05',
-                        poltronas_ocupadas: []
-                    },
-                    1212: {
-                        sala: 2,
-                        filme: 'Moana 2',
-                        horario: '19:30',
-                        data: '2024-12-05',
-                        poltronas_ocupadas: ['a5', 'a6']
-                    },
-                    2121: {
-                        sala: 1,
-                        filme: 'Moana 2',
-                        horario: '18:30',
-                        data: '2024-12-06',
-                        poltronas_ocupadas: ['a5']
-                    }
-                }
-                
-                // Convertendo o array em uma string JSON e armazenando no localStorage
-                localStorage.setItem('sessions', JSON.stringify(sessions));
-                
-            }
-        }
+        
     </script>
     
 </body>
