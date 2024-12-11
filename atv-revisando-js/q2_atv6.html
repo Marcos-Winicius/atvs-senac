@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro Usuário</title>
+    
+    <style>
+        /* Resetando margens e padding padrões */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* Definindo um estilo básico para o body */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            height: 100vh;
+        }
+        
+        /* Estilo do header e navegação */
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            width: 100%;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+        }
+        
+        nav ul li {
+            margin: 0 15px;
+        }
+        
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        nav ul li a:hover {
+            color: #4CAF50;
+        }
+        
+        /* Estilo do conteúdo principal */
+        main {
+            margin-top: 80px; /* Deixa o conteúdo abaixo do header fixo */
+            
+            padding: 20px;
+            text-align: center;
+        }
+        .container{
+            margin-bottom: 10em;
+        }
+        /* Estilo para o formulário */
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            text-align: left;
+        }
+        
+        form input[type="text"],
+        form input[type="email"],
+        form input[type="password"],
+        form input[type="tel"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        form input[type="submit"] {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        form input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        
+        /* Estilo do footer */
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            padding: 15px 0;
+            width: 100%;
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#">Cadastro</a></li>
+                <li><a href="q1_atv5_login.html">Login</a></li>
+                <li><a href="q1_atv5_home.html">Home</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="container">
+            <h1>Cadastro</h1>
+            <form id="cadastro-form">
+                <label for="nome">Nome:</label>
+                <input type="text" name="nome" id="nome">
+                
+                <label for="cpf">CPF:</label>
+                <input type="text" name="cpf" id="cpf">
+                
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email">
+                
+                <label for="senha">Senha:</label>
+                <input type="password" name="senha" id="senha">
+                
+                <label for="telefone">Telefone:</label>
+                <input type="tel" name="telefone" id="telefone">
+                
+                <label for="cep">CEP:</label>
+                <input type="text" name="cep" id="cep">
+                
+                <label for="endereco">Endereço:</label>
+                <input type="text" name="endereco" id="endereco" readonly>
+                
+                <label for="bairro">Bairro:</label>
+                <input type="text" name="bairro" id="bairro" readonly>
+                
+                <label for="cidade">Cidade:</label>
+                <input type="text" name="cidade" id="cidade" readonly>
+                
+                <label for="uf">Estado:</label>
+                <input type="text" name="uf" id="uf" readonly>
+                
+                <input type="submit" value="Cadastrar">
+            </form>
+        </div>
+    </main>
+    
+    <footer>
+        <p>Site desenvolvido por Marcos Winicius</p>
+    </footer>
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(() => {
+            // Função para buscar o endereço pelo CEP
+            $("#cep").on("blur", function() {
+                const cep = $(this).val().replace(/\D/g, "");
+
+                if (cep.length === 8) {
+                    $.getJSON(`https://viacep.com.br/ws/${cep}/json/`, function(data) {
+                        if (!data.erro) {
+                            $("#endereco").val(data.logradouro);
+                            $("#bairro").val(data.bairro);
+                            $("#cidade").val(data.localidade);
+                            $("#uf").val(data.uf);
+                        } else {
+                            alert("CEP não encontrado.");
+                        }
+                    }).fail(() => {
+                        alert("Erro ao buscar o CEP. Tente novamente mais tarde.");
+                    });
+                } else {
+                    alert("CEP inválido. Por favor, digite um CEP válido.");
+                }
+            });
+
+            $("#cadastro-form").on('submit', (e) => {
+                e.preventDefault();
+                
+                // Serializa os dados do formulário
+                const cadastro_form = $("#cadastro-form").serializeArray();
+                const formDataObject = {};
+                
+                // Converte os campos do formulário em um objeto
+                cadastro_form.forEach((item) => {
+                    formDataObject[item.name] = item.value;
+                });
+                
+                console.log(formDataObject.email);
+                // Armazena o objeto como JSON no localStorage
+                if(formDataObject.email){
+                    localStorage.setItem(formDataObject.email, JSON.stringify(formDataObject));
+                }
+                
+                // Redireciona para a página de login
+                window.location.href = 'q1_atv5_login.html';
+            });
+        });
+    </script>
+</body>
+</html>
