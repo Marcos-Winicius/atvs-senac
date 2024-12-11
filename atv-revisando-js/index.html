@@ -1,77 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Revisando-js</title>
-    <script>
-        // let n1 = Number(prompt('Número: '))
-        // if(n1 >= 0 && n1 % 2 == 0){
-        //     console.log("O número é positivo e par")
-        // }else if(n1 >= 0 && n1 % 2 != 0){
-        //     console.log("O número é positivo e ímpar")
-        // }else if(n1 < 0 && n1 % 2 == 0){
-        //     console.log("O número é negativo e par")
-        // }else if(n1 < 0 && n1 % 2 != 0){
-        //     console.log("O número é negativo e ímpar")
-        // }
-
-        // // Ou
-
-        // if(n1 >= 0){
-        //     console.log(n1 % 2 == 0 ? "O número é positivo e par" : "O número é positivo e ímpar")
-        // }else{
-        //     console.log(n1 % 2 == 0 ? "O número é negativo e par" : "O número é negativo e ímpar")
-        // }
-
-        // // Ou a menor linha possível
-        // document.write(n1 % 2 ==     0 ? "O número é par" : "O número é ímpar")
-
-        // // FOR
-        // for(let i = 0; i < 6; i++){
-        //     console.log(`${i}`)
-        // }
-
-
-        
-        // // Functions
-        // let soma = (a, b) => {
-        //     if(typeof a != "number" || typeof b != "number"){
-        //         throw new Error('Ambos os parâmetros devem ser números')
-        //     }
-        //     return a + b
-        // }
-        
-        // console.log(soma(6, 5));
-        
-    </script>
+    <title>Índice de Atividades</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .activity {
+            margin-bottom: 20px;
+        }
+        .activity h2 {
+            color: #555;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            margin: 8px 0;
+        }
+        ul li a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        ul li a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <!-- <h1>Carlos é front-end developer</h1> -->
-    <h1>Depois crio um dashboard</h1> 
-    <p>Link temporário: <a href="q2_atv5_home.html">Atividade 5</a></p>
+    <div class="container">
+        <h1>Índice de Atividades</h1>
+        <div id="activities"></div>
+    </div>
 
     <script>
-        // Fazer requisição
-        document.addEventListener('DOMContentLoaded', async()=>{
-            try {
-                const response = await fetch('/api/arquivos');
-                if(!response.ok){
-                    throw new Error('Erro ao fazer requisição!')
-                }
+        const files = {
+            "Atividade 1": ["q1_atv1.html", "q2_atv1.html"],
+            "Atividade 2": ["q1_atv2_25-11.html", "q2_atv2_25-11.html", "q3_atv2_25-11.html", "q4_atv2_25-11.html"],
+            "Atividade 3": ["q1_atv3.html", "q2_atv3.html"],
+            "Atividade 4": ["q1_atv4.html", "q2_atv4.html"],
+            "Atividade 5": ["q1_atv5_cadastro.html", "q1_atv5_home.html", "q1_atv5_login.html", "q2_atv5_pedidos.html", "q2_atv5_sala.html", "q2_atv5_moana-2.html", "q2_atv5_wicked.html", "q2_atv5_home.html"],
+            "Atividade 6": ["q1_atv6.html"]
+        };
 
-                const result = await response.json();
-                console.log(result)
-                result.forEach((item)=>{
-                    const p = document.createElement('p');
-                    p.textContent = item
+        const container = document.getElementById('activities');
 
-                    document.body.appendChild(p);
-                })
-            } catch (error) {
-                
-            }
-        })
+        for (const [activity, links] of Object.entries(files)) {
+            const section = document.createElement('div');
+            section.classList.add('activity');
+
+            const heading = document.createElement('h2');
+            heading.textContent = activity;
+            section.appendChild(heading);
+
+            const list = document.createElement('ul');
+
+            links.forEach(file => {
+                const listItem = document.createElement('li');
+                const link = document.createElement('a');
+                link.href = file;
+                link.textContent = file;
+                listItem.appendChild(link);
+                list.appendChild(listItem);
+            });
+
+            section.appendChild(list);
+            container.appendChild(section);
+        }
     </script>
 </body>
 </html>
